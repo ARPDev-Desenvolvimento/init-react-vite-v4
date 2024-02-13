@@ -3,7 +3,7 @@ import "./App.css";
 function App() {
   return (
     <>
-      <h1>Nova Tentativa!</h1>
+      <h1>Hello Word</h1>
     </>
   );
 }
