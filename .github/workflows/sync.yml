@@ -15,14 +15,14 @@ jobs:
 
       - name: Print Secret Value
         run: |
-          echo "O valor da minha secret é: ${{ secrets.GH_TOKEN }}"
+          echo "O valor da minha secret é: ${{ secrets.TOKEN }}"
       
       - name: Clone repository with access token
         run: |
-          git clone https://github.com/ARPDev-Desenvolvimento/init-react-vite-v3.git temp
+          git clone https://github.com/ARPDev-Desenvolvimento/init-react-vite-v5.git temp
           cp -r temp/. .
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.TOKEN }}
 
       - name: Commit and push changes
         run: |
@@ -30,4 +30,4 @@ jobs:
           git config --local user.email "arpdevdesenvolvimento@gmail.com"
           git add .
           git commit -m "Sync changes from first repository"
-          git push https://${{secrets.GH_TOKEN}}@github.com/ARPDev-Desenvolvimento/init-react-vite-v2.git master
+          git push https://${{secrets.TOKEN}}@github.com/ARPDev-Desenvolvimento/init-react-vite-v5.git master
