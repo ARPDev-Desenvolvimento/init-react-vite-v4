@@ -11,42 +11,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ARPDev-Desenvolvimento/init-react-vite-v5
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Commit and push changes
+      - name: Checkout source repository
+        uses: actions/checkout@v2
+
+      - name: Get PR metadata
+        id: pr_metadata
         run: |
+          PR_TITLE=$(jq -r '.pull_request.title' $GITHUB_EVENT_PATH)
+          PR_DESCRIPTION=$(jq -r '.pull_request.body' $GITHUB_EVENT_PATH)
+          PR_NUMBER=$(jq -r '.pull_request.number' $GITHUB_EVENT_PATH)
+          echo "::set-output name=title::$PR_TITLE"
+          echo "::set-output name=description::$PR_DESCRIPTION"
+          echo "::set-output name=number::$PR_NUMBER"
+
+      - name: clone v5
+        run: git clone https://github.com/ARPDev-Desenvolvimento/init-react-vite-v4.git temp
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      
+      - name: clone v4
+        run: git clone https://github.com/ARPDev-Desenvolvimento/init-react-vite-v5.git destino
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+      - name: clean
+        run: rm -rf destino/src/*
+      
+      - name: copy
+        run: cp -rf temp/src/* destino/src
+
+      - name: push
+        run: |
+          cd destino/
           git config --local user.name "ARPDev-Desenvolvimento"
           git config --local user.email "arpdevdesenvolvimento@gmail.com"
           git add .
-          git commit -m "Sync changes from pull request"
-          git push https://${{secrets.TOKEN}}@github.com/ARPDev-Desenvolvimento/init-react-vite-v5.git ${{ github.event.pull_request.head.ref }}
+          git commit -m "Synchronized changes from pull request ${{ steps.pr_metadata.outputs.number }}: ${{ steps.pr_metadata.outputs.title }}"
+          git push https://${{secrets.TOKEN}}@github.com/ARPDev-Desenvolvimento/init-react-vite-v5.git master
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      # - name: Print Secret Value
-      #   run: |
-      #     echo "O valor da minha secret é: ${{ secrets.TOKEN }}"
-      
-      # - name: Clone repository with access token
-      #   run: |
-      #     git clone https://github.com/ARPDev-Desenvolvimento/init-react-vite-v5.git temp
-      #     cp -r temp/. .
-      #   env:
-      #     TOKEN: ${{ secrets.TOKEN }}
-
-      # - name: Pull changes from remote repository
-      #   run: |
-      #     git pull origin master
-
-      # - name: Commit and push changes
-      #   run: |
-      #     git config --local user.name "ARPDev-Desenvolvimento"
-      #     git config --local user.email "arpdevdesenvolvimento@gmail.com"
-      #     git add .
-      #     git commit -m "Sync changes from first repository"
-      #     git push https://${{secrets.TOKEN}}@github.com/ARPDev-Desenvolvimento/init-react-vite-v5.git master
-      
-      - name: Remove temporary directory
-        run: rm -rf temp
+      - name: clear arquivo
+        run: |
+          rm -rf temp destino
