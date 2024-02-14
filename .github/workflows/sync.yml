@@ -18,6 +18,11 @@ jobs:
       - name: Checkout source repository
         uses: actions/checkout@v2
 
+      - name: Set up Git
+        run: |
+          git config --global user.name 'ARPDev-Desenvolvimento'
+          git config --global user.email 'arpdevdesenvolvimento@gmail.com'
+
       - name: Get PR metadata
         id: pr_metadata
         run: |
@@ -47,21 +52,23 @@ jobs:
       - name: create branch
         run: |
           cd destino/
+          git config --local user.name "ARPDev-Desenvolvimento"
+          git config --local user.email "arpdevdesenvolvimento@gmail.com"
           git checkout -b feature/${{ steps.pr_metadata.outputs.number }}
           git add .
           git commit -m "Synchronized changes from pull request ${{ steps.pr_metadata.outputs.number }}: ${{ steps.pr_metadata.outputs.title }}"
-          git push origin feature/${{ steps.pr_metadata.outputs.number }}
+          git push https://${{secrets.TOKEN}}@github.com/ARPDev-Desenvolvimento/init-react-vite-v5.git sic/${{ steps.pr_metadata.outputs.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      - name: Open Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          title: ${{ steps.pr_metadata.outputs.title }}
-          body: ${{ steps.pr_metadata.outputs.description }}
-          branch: feature/${{ steps.pr_metadata.outputs.number }}
-          base: master
-          token: ${{ secrets.TOKEN }}
+      # - name: Open Pull Request
+      #   uses: peter-evans/create-pull-request@v3
+      #   with:
+      #     title: ${{ steps.pr_metadata.outputs.title }}
+      #     body: ${{ steps.pr_metadata.outputs.description }}
+      #     branch: feature/${{ steps.pr_metadata.outputs.number }}
+      #     base: master
+      #     token: ${{ secrets.TOKEN }}
 
       - name: clear arquivo
         run: |
