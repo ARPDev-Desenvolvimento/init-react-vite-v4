@@ -5,7 +5,7 @@ on:
     # branches-ignore:
     #   - master
     branches:
-      - sic/**
+      - sicrono
 
 jobs:
   open_pull_request:
