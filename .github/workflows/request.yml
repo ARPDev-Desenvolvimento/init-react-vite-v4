@@ -5,7 +5,7 @@ on:
     # branches-ignore:
     #   - master
     branches:
-      - sicrono
+      - sincrono
 
 jobs:
   open_pull_request:
