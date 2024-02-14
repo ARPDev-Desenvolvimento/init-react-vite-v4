@@ -2,8 +2,8 @@ name: Open Pull Request on Sync Branch Change
 
 on:
   push:
-    branches-ignore:
-      - master
+    # branches-ignore:
+    #   - master
     branches:
       - sicronization
 
