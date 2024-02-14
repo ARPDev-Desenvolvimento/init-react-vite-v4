@@ -12,14 +12,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Adicione aqui seus passos para fazer as alterações no código, por exemplo:
-      # - name: Fazer alterações no código
-      #   run: echo "Alguma modificação" >> arquivo.txt
-
-      - name: Commit changes
+      - name: Add and commit changes
         run: |
           git config --local user.email "arpdevdesenvolvimento@gmail.com"
           git config --local user.name "ARPDev-Desenvolvimento"
+          git add .
+          git commit -m "Auto-generated pull request"
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        
+      - name: Push changes
+        run: git push origin sincronization
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
@@ -31,3 +36,5 @@ jobs:
           branch: sincronization  # Defina o branch de onde você quer criar o pull request
           base: master  # Defina o branch de destino do pull request
           delete-branch: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
