@@ -3,7 +3,7 @@ name: Pull Request Creation
 on:
   push:
     branches:
-      - sicronization  # Defina o branch de onde você quer criar o pull request
+      - test  # Defina o branch de onde você quer criar o pull request
 
 jobs:
   create_pull_request:
