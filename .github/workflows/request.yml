@@ -2,15 +2,15 @@ name: Open Pull Request on Sync Branch Change
 
 on:
   push:
-    branches:
-      - sincronization
+    branches-ignore:
+      - master
 
 jobs:
   open_pull_request:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Estract Branch Name
+      - name: Extract Branch Name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
@@ -21,11 +21,11 @@ jobs:
       #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       #     PULL_REQUEST_BRANCH: ""
       - name: Create Pull Request
-        uses: vsoch/pull-request-action@1.0.18
+        uses: vsoch/pull-request-action@1.1.0
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           PULL_REQUEST_BRANCH: "master"
-          PULL_REQUEST_TITLE: ${{ steps.extract_branch.outputs.branch}}
+          # PULL_REQUEST_TITLE: ${{ steps.extract_branch.outputs.branch}}
           # PULL_REQUEST_DRAFT: true
         # with:
 
