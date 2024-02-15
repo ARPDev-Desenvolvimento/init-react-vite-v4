@@ -49,15 +49,7 @@ jobs:
       - name: copy
         run: cp -rf temp/src/* destino/src
 
-      - name: Check for changes
-        id: git_changes
-        run: |
-          cd destino
-          git fetch origin master
-          git diff --quiet origin/master...sincrono || (echo "Changes detected"; exit 1)
-
       - name: create branch
-        if: steps.git_changes.outputs.stdout == 'Changes detected'
         run: |
           cd destino/
           git config --local user.name "ARPDev-Desenvolvimento"
